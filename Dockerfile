@@ -10,9 +10,7 @@ RUN apt-get -y upgrade
 # Packages installation
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y --fix-missing install apt-transport-https \
       curl \
-      nano \ 
-      supervisor \
-      openssl
+      supervisor
 
 # install nginx
 RUN echo "deb http://nginx.org/packages/mainline/ubuntu/ xenial nginx" >> /etc/apt/sources.list.d/nginx.list
