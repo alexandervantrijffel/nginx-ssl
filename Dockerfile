@@ -8,9 +8,15 @@ RUN apt-get update
 RUN apt-get -y upgrade
 
 # Packages installation
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y --fix-missing install apt-transport-https \
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y --fix-missing install \
+      software-properties-common \
+      apt-transport-https \
       curl \
-      supervisor
+      supervisor \
+      ca-certificates
+
+RUN add-apt-repository ppa:certbot/certbot
+RUN apt-get update && apt-get install python-certbot-nginx -y
 
 # install nginx
 RUN echo "deb http://nginx.org/packages/mainline/ubuntu/ xenial nginx" >> /etc/apt/sources.list.d/nginx.list
@@ -36,6 +42,7 @@ RUN mkdir -pv /etc/ssl/certs
 RUN curl -k https://curl.haxx.se/ca/cacert.pem -o /etc/ssl/certs/cacert.pem
 ADD config/nginx/ssl/nginx-selfsigned.crt /etc/ssl/certs/nginx-selfsigned.crt
 ADD config/nginx/ssl/dhparam.pem /etc/ssl/certs/dhparam.pem
+RUN update-ca-certificates
 
 # Add index.html and 404.html to public web dir
 RUN mkdir -pv /var/www/html
